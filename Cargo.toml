@@ -1,0 +1,9 @@
+[package]
+authors = ["Arash Sal Moslehian <arashsm79@yahoo.com>"]
+edition = "2021"
+# If you change the name here, you must also do it in flake.nix
+name = "mohole"
+version = "0.1.0"
+
+[dependencies]
+#pcap = "0.9.1"
