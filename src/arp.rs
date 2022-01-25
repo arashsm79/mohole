@@ -1,3 +1,4 @@
+use std::array::TryFromSliceError;
 use std::net::Ipv4Addr;
 use std::error::Error;
 use crate::ethernet::MacAddress;
@@ -62,20 +63,18 @@ pub struct ArpPacket {
     pub dest_addr: Ipv4Addr,
 }
 
-pub fn parse_arp(input: &[u8]) -> Result<(&[u8], ArpPacket), Box<dyn Error>> {
+pub fn parse_arp(input: &[u8]) -> Result<(&[u8], ArpPacket), TryFromSliceError> {
     let hw_type =  HardwareType::from(u16::from_be_bytes(<[u8; 2]>::try_from(&input[0..2])?));
     let protocol_type =  ProtocolType::from(u16::from_be_bytes(<[u8; 2]>::try_from(&input[2..4])?));
     let hw_size = <u8>::try_from(input[4])?;
     let protocol_size = <u8>::try_from(input[5])?;
     let operation =  Operation::from(u16::from_be_bytes(<[u8; 2]>::try_from(&input[6..8])?));
 
-    let src_mac = MacAddress::try_from(&input[8..12])?;
-    let src_addr = Ipv4Addr::from(<[u8; 4]>::try_from(&input[12..16])?);
-    let dest_mac = MacAddress::try_from(&input[16..20])?;
-    let dest_addr = Ipv4Addr::from(<[u8; 4]>::try_from(&input[20..24])?);
+    let src_mac = MacAddress::try_from(&input[8..14])?;
+    let src_addr = Ipv4Addr::from(<[u8; 4]>::try_from(&input[14..18])?);
+    let dest_mac = MacAddress::try_from(&input[18..24])?;
+    let dest_addr = Ipv4Addr::from(<[u8; 4]>::try_from(&input[24..28])?);
 
-    let (_, input) = input.split_at(24);
-    // let (_, input) = input.split_at(20 + ((header_length as i32 - 5)*4) as usize);
     let packet = ArpPacket { hw_type, protocol_type, hw_size, protocol_size, operation, src_mac, src_addr, dest_mac, dest_addr };
     Ok((input, packet))
 }

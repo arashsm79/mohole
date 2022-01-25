@@ -1,5 +1,5 @@
+use std::array::TryFromSliceError;
 use std::convert::TryFrom;
-use std::error::Error;
 use std::net::Ipv4Addr;
 
 #[derive(Debug)]
@@ -11,7 +11,7 @@ pub enum IPType {
 }
 
 #[derive(Debug)]
-pub struct IPv4Diagram {
+pub struct IPv4Datagram {
     pub version: u8,
     pub header_length: u8,
     pub type_of_service: u8,
@@ -37,7 +37,7 @@ impl From<u8> for IPType {
     }
 }
 
-pub fn parse_ipv4(input: &[u8]) -> Result<(&[u8], IPv4Diagram), Box<dyn Error>> {
+pub fn parse_ipv4(input: &[u8]) -> Result<(&[u8], IPv4Datagram), TryFromSliceError> {
     let version_header_length = <u8>::try_from(input[0])?;
     let version = version_header_length >> 4;
     let header_length = version_header_length & 15;
@@ -55,7 +55,7 @@ pub fn parse_ipv4(input: &[u8]) -> Result<(&[u8], IPv4Diagram), Box<dyn Error>> 
 
     let (_, input) = input.split_at(20);
     // let (_, input) = input.split_at(20 + ((header_length as i32 - 5)*4) as usize);
-    let diagram = IPv4Diagram {
+    let diagram = IPv4Datagram {
         version,
         header_length,
         type_of_service,
