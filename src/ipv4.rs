@@ -53,8 +53,12 @@ pub fn parse_ipv4(input: &[u8]) -> Result<(&[u8], IPv4Datagram), TryFromSliceErr
     let source_addr = Ipv4Addr::from(<[u8; 4]>::try_from(&input[12..16])?);
     let dest_addr = Ipv4Addr::from(<[u8; 4]>::try_from(&input[16..20])?);
 
-    let (_, input) = input.split_at(20);
-    // let (_, input) = input.split_at(20 + ((header_length - 5) * 4) as usize);
+    let (_, input) = if header_length > 5 {
+        input.split_at(20 + ((header_length - 5) * 4) as usize)
+    } else {
+        input.split_at(20)
+    };
+
     let diagram = IPv4Datagram {
         version,
         header_length,

@@ -1,6 +1,5 @@
 use std::array::TryFromSliceError;
 use std::net::Ipv4Addr;
-use std::error::Error;
 use crate::ethernet::MacAddress;
 
 #[derive(Debug)]
