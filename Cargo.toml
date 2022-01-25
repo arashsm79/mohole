@@ -6,4 +6,4 @@ name = "mohole"
 version = "0.1.0"
 
 [dependencies]
-#pcap = "0.9.1"
+pcap = "0.9.1"

@@ -73,8 +73,10 @@
         buildInputs = buildInputs ++ (with pkgs;
           # Tools you need for development go here.
           [
+            libpcap
           ]);
-          RUST_SRC_PATH = "${pkgs.rust-bin.${rustChannel}.latest.rust-src}/lib/rustlib/src/rust/library";
+        RUST_SRC_PATH = "${pkgs.rust-bin.${rustChannel}.latest.rust-src}/lib/rustlib/src/rust/library";
+        LIBPCAP_LIBDIR = "${pkgs.libpcap}/lib";
       };
     });
 }
